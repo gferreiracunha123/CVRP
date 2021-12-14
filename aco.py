@@ -4,6 +4,7 @@ from os import listdir
 from os.path import isfile, join
 
 from numpy.lib import math
+from tsplib95.utils import nint
 
 path = 'dataset'
 files = [f for f in listdir(path) if isfile(join(path, f))]
@@ -24,18 +25,25 @@ files = [f for f in listdir(path) if isfile(join(path, f))]
 #  -c N, --contar N número de formigas usadas em cada iteração (N> 0); default = 10
 # -d D, --dataset D especifica um conjunto particular de dados de demonstração; padrão = 33
 # calculo de distancia elclidiana
-def euclidean(a, b):
-    return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
+def euclidean(x, y):
+    xd = abs(x[0] - x[1]);
+    yd = abs(y[0] - y[1]);
+    return nint( math.sqrt( xd*xd + yd*yd) );
 
-path ="dataset/A-n44-k7.vrp"
+    #return nint(math.sqrt((a[0] * a[1] + b[0] * b[1])))
+   # return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
+
+path ="dataset/A-n32-k5.vrp"
 
 dataset = tsplib95.load(path)
 #lista de nos- EX x-y
 nodes = list(dataset.node_coords.values())
+
+
 #cria a matrix de distancia para as fromigas;
 world = pants.World(nodes, euclidean)
 #Configuração da capaciade das formigas e quantidade.
-solver = pants.Solver(ant_count=6,Q=100,limit=1000)
+solver = pants.Solver(ant_count=6,Q=100)
 solution = solver.solve(world)
 
 print('DISTANCE:', solution.distance) #total distance of the tour performed

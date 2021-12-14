@@ -2,6 +2,7 @@ import tsplib95
 from numpy.lib import math
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+from tsplib95.utils import nint
 
 
 def distance(lat1, long1, lat2, long2):
@@ -9,7 +10,7 @@ def distance(lat1, long1, lat2, long2):
 
 def create_data_model():
     """Stores the data for the problem."""
-    path = "dataset/A-n44-k7.vrp"
+    path = "dataset/A-n32-k5.vrp"
 
     dataset = tsplib95.load(path)
 
@@ -40,7 +41,7 @@ def create_data_model():
 
 
 def print_solution(data, manager, routing, solution):
-    path = "dataset/A-n44-k7.vrp"
+    path = "dataset/A-n32-k5.vrp"
 
     dataset = tsplib95.load(path)
 
@@ -55,7 +56,7 @@ def print_solution(data, manager, routing, solution):
         plan_output2 = 'cordenadas {}:\n'.format(vehicle_id)
         route_distance = 0
         route_load = 0
-        route_load2 = 0
+
         while not routing.IsEnd(index):
             node_index = manager.IndexToNode(index)
             route_load += data['demands'][node_index]
@@ -68,6 +69,8 @@ def print_solution(data, manager, routing, solution):
 
         plan_output += ' {0} Carga ({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
+        plan_output2 += ' [{0} , {1}]= {2} -> '.format(distacia_x_y[manager.IndexToNode(index)][0], distacia_x_y[manager.IndexToNode(index)][1],
+                                                       data['demands'][manager.IndexToNode(index)])
         plan_output += 'Distância da rota: {}m\n'.format(route_distance)
         plan_output += 'Carga da rota: {}\n'.format(route_load)
         print(plan_output)
@@ -78,9 +81,10 @@ def print_solution(data, manager, routing, solution):
     print('Total distance of all routes: {}m'.format(total_distance))
     print('Total load of all routes: {}'.format(total_load))
 
-def euclidean(a, b):
-    #calculo de distancia elclidiana
-    return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
+def euclidean(x, y):
+    xd = abs(x[0] - x[1]);
+    yd = abs(y[0] - y[1]);
+    return nint( math.sqrt( xd*xd + yd*yd) );
 
 def main():
     """Solve the CVRP problem."""
