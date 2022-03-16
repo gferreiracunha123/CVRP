@@ -1,4 +1,5 @@
 import tsplib95
+from numpy import sqrt
 from numpy.lib import math
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
@@ -10,7 +11,7 @@ def distance(lat1, long1, lat2, long2):
 
 def create_data_model():
     """Stores the data for the problem."""
-    path = "dataset/A-n32-k5.vrp"
+    path = "dataset/A-n33-k5.vrp"
 
     dataset = tsplib95.load(path)
 
@@ -34,14 +35,14 @@ def create_data_model():
         #calculate_distance_matrix( list(dataset.node_coords.values()))
     data['demands'] =list(dataset.demands.values())
         #list(dataset.demands.values())
-    data['num_vehicles'] = 6
+    data['num_vehicles'] = 7
     data['vehicle_capacities'] = [100] *  data['num_vehicles']
     data['depot'] = 0
     return data
 
 
 def print_solution(data, manager, routing, solution):
-    path = "dataset/A-n32-k5.vrp"
+    path = "dataset/A-n54-k7.vrp"
 
     dataset = tsplib95.load(path)
 
@@ -81,10 +82,8 @@ def print_solution(data, manager, routing, solution):
     print('Total distance of all routes: {}m'.format(total_distance))
     print('Total load of all routes: {}'.format(total_load))
 
-def euclidean(x, y):
-    xd = abs(x[0] - x[1]);
-    yd = abs(y[0] - y[1]);
-    return nint( math.sqrt( xd*xd + yd*yd) );
+def euclidean(a, b):
+    return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
 
 def main():
     """Solve the CVRP problem."""
