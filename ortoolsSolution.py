@@ -1,10 +1,7 @@
 import tsplib95
-from numpy import sqrt
 from numpy.lib import math
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from tsplib95.utils import nint
-
 
 def distance(lat1, long1, lat2, long2):
     return euclidean([lat1,long1],[lat2,long2])
