@@ -1,44 +1,65 @@
 import acopy
+import seed as seed
 import tsplib95
-import pants
+import time
+import random
+import click
 from os import listdir
 from os.path import isfile, join
 
+from acopy import ant, solvers, plugins, utils
 from numpy.lib import math
-from tsplib95.utils import nint
 
-path = 'dataset'
-files = [f for f in listdir(path) if isfile(join(path, f))]
-#Documentacao
-#https://pypi.org/project/ACO-Pants/
 
-def euclidean(a, b):
-    return math.sqrt(pow(61 - b[1], 2) + pow(5 - b[0], 2))
+class add_demand(acopy.solvers.SolverPlugin):
 
-    #return nint(math.sqrt((a[0] * a[1] + b[0] * b[1])))
-   # return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
+    def __init__(self, delta=1):
+        super().__init__(delta=delta)
+        self.delta = delta
 
-path ="dataset/A-n33-k5.vrp"
+    def on_iteration(self, state):
+        antaux = state.colony.get_ants(self.delta)
+#        state.ants.append(antaux)
 
-dataset = tsplib95.load(path)
-#lista de nos- EX x-y
-nodes = list(dataset.node_coords.values())
-#path = "dataset/A-n54-k7.vrp"
 
-dataset = tsplib95.load(path)
+path = "dataset/A-n32-k5.vrp"
 
-distacia_x_y = list(dataset.node_coords.values())
-
-#cria a matrix de distancia para as fromigas;
-solver = acopy.Solver(rho=0.8)
-colony = acopy.Colony(alpha=2, beta=5)
 problem = tsplib95.load(path)
-G=problem.get_graph()
-tour = solver.solve(G, colony, limit=1000)
-#total de distancias.
-print(tour.cost)
-print(tour.nodes)
 
+G = problem.get_graph()
 
+seed = seed or str(hash(time.time()))
+click.echo(f'SEED={seed}')
+random.seed(seed)
 
+colony = ant.Colony(alpha=2, beta=5)
+solver = solvers.Solver(rho=0.8, q=problem.capacity, top=5)
 
+click.echo(solver)
+
+printout = plugins.Printout()
+click.echo(f'Registering plugin: {printout}')
+solver.add_plugin(printout)
+
+timer = plugins.Timer()
+click.echo(f'Registering plugin: {timer}')
+solver.add_plugin(timer)
+
+plugin = plugins.Threshold(threshold=784)
+click.echo(f'Registering plugin: {plugin}')
+solver.add_plugin(plugin)
+
+recorder = plugins.StatsRecorder()
+click.echo(f'Registering plugin: {recorder}')
+solver.add_plugin(recorder)
+
+demand = add_demand(1)
+solver.add_plugin(demand)
+click.echo(f'Registering plugin: {demand}')
+
+solver.solve(G, colony, gen_size=1, limit=50)
+
+click.echo(timer.get_report())
+if recorder:
+    plotter = utils.plot.Plotter(recorder.stats)
+    plotter.plot()
