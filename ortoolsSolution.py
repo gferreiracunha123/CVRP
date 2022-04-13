@@ -8,7 +8,7 @@ def distance(lat1, long1, lat2, long2):
 
 def create_data_model():
     """Stores the data for the problem."""
-    path = "dataset/A-n33-k5.vrp"
+    path = "dataset/E-n22-k4.vrp"
 
     dataset = tsplib95.load(path)
 
@@ -32,14 +32,14 @@ def create_data_model():
         #calculate_distance_matrix( list(dataset.node_coords.values()))
     data['demands'] =list(dataset.demands.values())
         #list(dataset.demands.values())
-    data['num_vehicles'] = 7
-    data['vehicle_capacities'] = [100] *  data['num_vehicles']
+    data['num_vehicles'] = 4
+    data['vehicle_capacities'] = [6000] *  data['num_vehicles']
     data['depot'] = 0
     return data
 
 
 def print_solution(data, manager, routing, solution):
-    path = "dataset/A-n54-k7.vrp"
+    path = "dataset/E-n22-k4.vrp"
 
     dataset = tsplib95.load(path)
 
@@ -143,7 +143,7 @@ def main():
         print("Nada")
     rou=[]
     rou.append(manager.IndexToNode(routing.Start(0)))
-    print(rou," : ",solution.ObjectiveValue())
+    #print(rou," : ",solution.ObjectiveValue())
 
 
 if __name__ == '__main__':
