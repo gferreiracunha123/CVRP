@@ -47,7 +47,7 @@ def create_data_model(path):
     return data
 
 
-def print_solution(inicio, file, path, data, manager, routing, solution):
+def print_solution(inicio,file,path,data, manager, routing, solution):
     dict_solucao = dict({})
     list_dict_solucao = []
     """Prints solution on console."""
@@ -91,10 +91,7 @@ def print_solution(inicio, file, path, data, manager, routing, solution):
     print('Total load of all routes: {}'.format(total_load))
     cria_csv(inicio, file, len(list_dict_solucao), total_load, total_distance, 0)
 
-
 ''
-
-
 def dist(a, b):
     (x1, y1), (x2, y2) = a, b
     return math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
@@ -109,7 +106,7 @@ def main():
     index = 0
     for file in files:
         if file != "Loggi-n501-k24.vrp":
-            path = raiz + "/" + file
+            path = raiz+"/"+file
             data = create_data_model(path)
 
             # Create the routing index manager.
@@ -161,14 +158,13 @@ def main():
 
             # Print solution on console.
             if solution:
-                print_solution(index == 0, file, path, data, manager, routing, solution)
+                print_solution(index==0,file,path,data, manager, routing, solution)
             else:
                 print("Nada")
 
             index = index + 1
 
     exit()
-
 
 def cria_csv(inicio, nome, qnt_veiculo, total_capacidade, total_distancia, interacao):
     f = open('dataset/analise/analise_Ortools.csv', 'a', newline='', encoding='utf-8')
