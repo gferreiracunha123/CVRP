@@ -62,7 +62,7 @@ def carga(problem, volta):
     #except:
      #   print("Quantidade formigas default")
     fator_evaporacao_feromonio = 0.8
-    numero_interacao = 100
+    numero_interacao = 200
 
     rotas = procurarota(alpha, beta, capacidade_feromonio, quantidade_formigas, fator_evaporacao_feromonio,
                         numero_interacao, [], problem)
