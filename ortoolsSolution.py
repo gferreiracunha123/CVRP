@@ -105,7 +105,7 @@ def main():
     files = [f for f in listdir(raiz) if isfile(join(raiz, f))]
     index = 0
     for file in files:
-        if file != "Loggi-n501-k24.vrp":
+        if file != "Loggi-n501-k24.vrp" and file == "E-n22-k4.vrp":
             path = raiz+"/"+file
             data = create_data_model(path)
 
@@ -114,13 +114,15 @@ def main():
                                                    data['num_vehicles'], data['depot'])
 
             # Create Routing Model.
-            routing = pywrapcp.RoutingModel(manager)
 
+            routing = pywrapcp.RoutingModel(manager)
+            nodeinicio = routing.start(0)
+            from_node = manager.IndexToNode(nodeinicio)
             # Create and register a transit callback.
             def distance_callback(from_index, to_index):
                 """Returns the distance between the two nodes."""
                 # Convert from routing variable Index to distance matrix NodeIndex.
-                from_node = manager.IndexToNode(from_index)
+               # from_node = manager.IndexToNode(from_index)
                 to_node = manager.IndexToNode(to_index)
                 return data['distance_matrix'][from_node][to_node]
 
