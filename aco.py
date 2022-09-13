@@ -23,9 +23,8 @@ def dist(a, b):
     return math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
 
 
-def procurarota(alpha, beta, capacidade_feromonio, fator_evaporacao_feromonio, numero_interacao,
+def procura_rota(alpha, beta, capacidade_feromonio, fator_evaporacao_feromonio, numero_interacao,
                 problem):
-    #  click.echo(f'SEED={seed}')
 
     G = problem.get_graph()
 
@@ -53,7 +52,6 @@ def procurarota(alpha, beta, capacidade_feromonio, fator_evaporacao_feromonio, n
 
 class Printout(SolverPlugin):
     _ROW = '{:<10} {:<20} {}'
-    interacao
 
     def initialize(self, solver):
         super().initialize(solver)
@@ -87,11 +85,6 @@ def carga(problem):
     alpha = 2
     beta = 5
     capacidade_feromonio = problem.capacity
-    quantidade_formigas = 20
-    # try:
-    # quantidade_formigas = int(str(problem.comment).split(":")[1].split(",")[0])
-    # except:
-    #   print("Quantidade formigas default")
     fator_evaporacao_feromonio = 0.8
     numero_interacao = 200
 
@@ -176,12 +169,9 @@ def main():
     index = 0
     x = []
     y = []
-    list_cor = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
     indexcor = 0
-    listr = []
     for file in files:
-        #if file == "E-n22-k4.vrp":
-
+        if file == "A-n32-k5.vrp":
             inicio = time.time()
             total_carga = 0
             total_distancia = 0
