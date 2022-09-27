@@ -4,57 +4,42 @@ from os import listdir
 from os.path import isfile, join
 import matplotlib.pyplot as plt
 import tsplib95
+import numpy as np
+from scipy.spatial.distance import squareform, pdist
+from tsplib95.distances import euclidean, geographical, pseudo_euclidean
 
 raiz = 'dataset/result/'
 raizDataset = 'dataset/'
 files = [f for f in listdir(raiz) if isfile(join(raiz, f))]
 
 
-def distance(lat1, long1, lat2, long2):
-    return dist([lat1, long1], [lat2, long2])
+def route_cost(self, routes):
+    cost = 0
+    for r in routes:
+        for i in range(1, len(r)):
+            cost += self[r[i - 1], r[i]]
+        cost += self[r[-1], r[0]]
+    return cost
 
-
-def dist(a, b):
-    (x1, y1), (x2, y2) = a, b
-    return math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2)
-
-
-def group_elements(lst, chunk_size):
-    listAux = []
-    listAux2 = []
-    index = 1
-    for aux in lst:
-        listAux.append(aux)
-        if index == chunk_size:
-            index = 1
-            listAux2.append(listAux.copy())
-            listAux = []
-        else:
-            index = index + 1
-    return listAux2
 
 
 for file in files:
     f = open('dataset/result/%s' % file, 'r')
     listRoute = f.read().split("\n")
-    problem_aux = tsplib95.load(raizDataset + "/" + file.replace(".sol", ".vrp"))
+    problem_aux = tsplib95.load(raizDataset + "/" + "A-n33-k5.vrp")
     distanciaSingle = 0
-    distanci=0
-    for rote in listRoute:
+    distanci = 0
 
-        rote = rote.replace(rote.split(":")[0], "").replace(":", "")
-        listVeiculos = rote.split(" ")[1:]
-        x = 2
-        listVeiculos = group_elements(listVeiculos, 2)
+    passo_1=pdist(list(problem_aux.node_coords.values()))
+    passo_2 = squareform(passo_1)
+    passo_3 = np.matrix(data=passo_2)
+    passo_4 = np.round(passo_3)
+    testeList=passo_4
 
-        for cood in listVeiculos:
-            if len(cood) != 1:
-                distanci = dist(problem_aux.node_coords[int(cood[0])],
-                                                         problem_aux.node_coords[int(cood[1])])
-                print(cood[0],str(problem_aux.node_coords[int(cood[0])]))
-                print(cood[1],str(problem_aux.node_coords[int(cood[1])]))
-                distanciaSingle = distanciaSingle + distanci
+    #A-n32-k5.vrp"
+    #route_cost(testeList,[[0, 21, 31, 19, 17, 13, 7, 26],[0, 12, 1, 16, 30], [0, 27, 24],[0, 29, 18, 8, 9, 22, 15, 10, 25, 5, 20],[0, 14, 28, 11, 4, 23, 3, 2, 6]])
+    # A-n33-k5.vrp"
+    #route_cost(testeList,[[0, 15, 17, 9, 3, 16, 29],[0, 12, 5, 26, 7,8,13,32,2], [0,20, 4, 27,25,30,10],[0,23, 28, 18, 22],[0,24, 6, 19, 21, 1, 31, 11]])
 
-    print(distanciaSingle)
 
 
